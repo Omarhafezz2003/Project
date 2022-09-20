@@ -50,12 +50,12 @@ public:
 
 class Client :public Person {
 private:
-	double balance;
+	double balance=0;
 public:
-	Client(string n, string p, int i, int b): Person(n,p,i) {
+	Client(string n, string p, int i, double b): Person(n,p,i) {
 		balance = b;
 	}
-	void Setbalnce(double b) {
+	void Setbalance(double b) {
 		if (b < 1500) {
 			cout << "Enter correct balance ";
 		}
@@ -79,13 +79,15 @@ public:
 	void checkbalance() {
 		cout << "Balance= " << balance;
 	}
-	void transferto(Client c, int a) {
-		if (a < balance) {
-			balance -= a;
-			c.balance+=a;
+	double transferto(Client & a, double amount) {
+		if (amount <= balance) {
+			a.deposit(amount);
+			balance -= amount;
 		}
-		else
-			cout << "Can't transfer this amount ";
+		else {
+			cout << "Amount exceeded";
+		}
+		return balance;
 	}
 	void display() {
 		Person::display();
@@ -97,7 +99,7 @@ class Employee :public Person {
 private:
 	double salary;
 public:
-	Employee(string n, string p, int i, int s) : Person(n, p, i) {
+	Employee(string n, string p, int i, double s) : Person(n, p, i) {
 		salary = s;
 	}
 	void Setsalary(double s) {
@@ -117,16 +119,31 @@ public:
 };
 
 class Admin :public Employee {
-
+public:
+	Admin(string n, string p, int i, double s) :Employee(n, p, i, s) {
+	}
 };
 
 
-int main() {
-	Client cl("omarhafez", "123456789", 123, 6000),cl2("mohamed","abcdefghi",987,9000);
-	cl.deposit(200);
-	cout<< endl << "New balance: " << cl.Getbalance() << endl << endl;
-	cl2.transferto(cl, 1000);
-	cl.display(); 
-	cout << endl<<endl<<endl;
-	cl2.display();
-}
+	int main() {
+		Client cl("omarhafez", "123456789", 123, 6000), cl2("mohamed", "abcdefghi", 987, 9000);
+		cl.deposit(200);
+		cout << endl << "New balance: " << cl.Getbalance() << endl << endl;
+		cl.transferto(cl2, 1000);
+		cout << "client 1 ";
+		cl.checkbalance();
+		cout << "\nclient 2";
+		cl2.checkbalance();
+		cl2.withdraw(500);
+		cout << "\nCurrent balance= " << cl2.Getbalance();
+		cout << endl << endl;
+		cl.display();
+		cout << endl << endl;
+		cl2.display();
+		cout << endl << endl;
+		Employee e("mahmoud", "9874729919", 222, 7000);;
+		e.display();
+		cout << endl << endl;
+		Admin a("yasser", "444444444", 111, 12000);
+		a.display();
+	}
